@@ -30,7 +30,7 @@ from pickle import loads, dumps, UnpicklingError
 import openerp
 from openerp.tools.translate import _
 
-from ..exception import (NotReadableJobError,
+from openerp.addons.connector.exception import (NotReadableJobError,
                          NoSuchJobError,
                          FailedJobError,
                          RetryableJobError)
