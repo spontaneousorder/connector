@@ -30,7 +30,7 @@ from pickle import loads, dumps, UnpicklingError
 import openerp
 from openerp.tools.translate import _
 
-from openerp.addons.connector.exception import (NotReadableJobError,
+from ..exception import (NotReadableJobError,
                          NoSuchJobError,
                          FailedJobError,
                          RetryableJobError)
@@ -582,6 +582,8 @@ class Job(object):
                     seconds = postpone_seconds
                 else:
                     break
+        elif not seconds:
+            seconds = RETRY_INTERVAL
         return seconds
 
     def postpone(self, result=None, seconds=None):
@@ -699,7 +701,8 @@ def job(func=None, default_channel='root', retry_pattern=None):
 
     """
     if func is None:
-        return functools.partial(job, default_channel=default_channel)
+        return functools.partial(job, default_channel=default_channel,
+                                 retry_pattern=retry_pattern)
 
     def delay(session, model_name, *args, **kwargs):
         """Enqueue the function. Return the uuid of the created job."""
